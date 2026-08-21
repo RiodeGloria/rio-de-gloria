@@ -1,880 +1,1087 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Ministerio Cristiano Río de Gloria</title>
-
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  font-family:Arial, Helvetica, sans-serif;
-  background:#020b16;
-  color:white;
-}
-
-header{
-  position:sticky;
-  top:0;
-  z-index:1000;
-  background:rgba(2,11,22,.96);
-  border-bottom:1px solid rgba(0,150,255,.25);
-}
-
-.nav{
-  max-width:1200px;
-  margin:auto;
-  min-height:72px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:10px 20px;
-}
-
-.logo-area{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.logo-area img{
-  width:52px;
-  height:52px;
-  border-radius:50%;
-  object-fit:cover;
-}
-
-.logo-area div{
-  font-weight:bold;
-  font-size:17px;
-}
-
-.logo-area span{
-  display:block;
-  color:#61bcff;
-  font-size:12px;
-  margin-top:3px;
-}
-
-.menu{
-  display:flex;
-  gap:22px;
-}
-
-.menu a{
-  color:white;
-  text-decoration:none;
-  font-size:14px;
-}
-
-.menu a:hover{
-  color:#25a6ff;
-}
-
-.hero{
-  min-height:620px;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-
-  background:
-    linear-gradient(
-      rgba(0,12,28,.45),
-      rgba(0,12,28,.9)
-    ),
-    url("portada-templo.jpg");
-
-  background-size:cover;
-  background-position:center;
-}
-
-.hero-contenido{
-  max-width:820px;
-  padding:40px 20px;
-}
-
-.hero-logo{
-  width:130px;
-  height:130px;
-  object-fit:cover;
-  border-radius:50%;
-  border:3px solid #27a8ff;
-  box-shadow:0 0 25px rgba(0,153,255,.65);
-  margin-bottom:22px;
-}
-
-.hero h1{
-  font-size:52px;
-  line-height:1.08;
-}
-
-.hero h1 span{
-  color:#35adff;
-}
-
-.hero p{
-  max-width:650px;
-  margin:18px auto 0;
-  color:#d0e7f7;
-  font-size:19px;
-  line-height:1.5;
-}
-
-.botones{
-  margin-top:30px;
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:13px;
-}
-
-.boton{
-  text-decoration:none;
-  color:white;
-  padding:14px 22px;
-  border-radius:8px;
-  font-weight:bold;
-  border:1px solid #168fff;
-  background:#0788e8;
-  transition:.2s;
-}
-
-.boton.secundario{
-  background:rgba(2,24,46,.9);
-}
-
-.boton:hover{
-  transform:translateY(-2px);
-  box-shadow:0 6px 18px rgba(0,135,255,.3);
-}
-
-.seccion{
-  padding:75px 20px;
-}
-
-.contenedor{
-  max-width:1100px;
-  margin:auto;
-}
-
-.titulo{
-  text-align:center;
-  margin-bottom:42px;
-}
-
-.titulo small{
-  color:#279fff;
-  font-weight:bold;
-  letter-spacing:2px;
-}
-
-.titulo h2{
-  margin-top:8px;
-  font-size:36px;
-}
-
-.titulo p{
-  color:#9eb4c9;
-  max-width:650px;
-  margin:12px auto 0;
-  line-height:1.5;
-}
-
-.accesos{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:17px;
-}
-
-.acceso{
-  background:
-    linear-gradient(
-      145deg,
-      #071c34,
-      #031222
-    );
-
-  border:1px solid rgba(59,142,207,.28);
-  border-radius:15px;
-  padding:28px 18px;
-  text-align:center;
-  text-decoration:none;
-  color:white;
-}
-
-.acceso .icon{
-  font-size:38px;
-}
-
-.acceso h3{
-  margin-top:14px;
-  font-size:18px;
-}
-
-.acceso p{
-  margin-top:8px;
-  color:#92a8bd;
-  font-size:13px;
-}
-
-.sobre{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:45px;
-  align-items:center;
-}
-
-.sobre img{
-  width:100%;
-  border-radius:18px;
-  box-shadow:0 15px 35px rgba(0,0,0,.4);
-}
-
-.sobre h2{
-  font-size:36px;
-}
-
-.sobre p{
-  color:#a9bdcf;
-  line-height:1.7;
-  margin-top:18px;
-}
-
-.pastores{
-  background:#031323;
-}
-
-.pastor-card{
-  max-width:800px;
-  margin:auto;
-  display:grid;
-  grid-template-columns:45% 1fr;
-  background:#071c33;
-  border:1px solid rgba(54,145,218,.3);
-  border-radius:18px;
-  overflow:hidden;
-}
-
-.pastor-card img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.pastor-info{
-  padding:35px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-.pastor-info h3{
-  font-size:28px;
-}
-
-.pastor-info span{
-  color:#3aadff;
-  margin-top:8px;
-}
-
-.pastor-info p{
-  color:#a9bdcf;
-  margin-top:17px;
-  line-height:1.6;
-}
-
-.horarios-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-}
-
-.horario{
-  background:#06192d;
-  border:1px solid rgba(53,139,207,.25);
-  border-radius:13px;
-  padding:24px;
-}
-
-.horario strong{
-  color:#32a8ff;
-  display:block;
-  font-size:18px;
-}
-
-.horario span{
-  display:block;
-  margin-top:10px;
-  font-size:19px;
-}
-
-.radio{
-  background:
-    radial-gradient(
-      circle at top,
-      #0a3763,
-      #020b16 60%
-    );
-}
-
-.radio-box{
-  display:grid;
-  grid-template-columns:40% 1fr;
-  gap:35px;
-  align-items:center;
-  max-width:900px;
-  margin:auto;
-}
-
-.radio-box img{
-  width:100%;
-  max-width:360px;
-  border-radius:18px;
-}
-
-.radio-box h2{
-  font-size:38px;
-}
-
-.radio-box p{
-  color:#aac2d6;
-  margin:15px 0 25px;
-  line-height:1.6;
-}
-
-.galeria{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-}
-
-.galeria img{
-  width:100%;
-  height:230px;
-  object-fit:cover;
-  border-radius:11px;
-}
-
-.contacto{
-  background:#031323;
-}
-
-.contacto-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:16px;
-}
-
-.contacto-card{
-  background:#071b31;
-  border-radius:13px;
-  padding:26px;
-  text-align:center;
-}
-
-.contacto-card .icon{
-  font-size:32px;
-}
-
-.contacto-card h3{
-  margin-top:12px;
-}
-
-.contacto-card p{
-  margin-top:8px;
-  color:#9eb3c6;
-}
-
-footer{
-  text-align:center;
-  padding:35px 20px;
-  border-top:1px solid rgba(42,134,202,.2);
-}
-
-footer img{
-  width:65px;
-  height:65px;
-  border-radius:50%;
-  object-fit:cover;
-}
-
-footer h3{
-  margin-top:12px;
-}
-
-footer p{
-  color:#8298ac;
-  margin-top:7px;
-}
-
-.redes{
-  margin-top:20px;
-  display:flex;
-  justify-content:center;
-  gap:18px;
-}
-
-.redes a{
-  color:#2ca8ff;
-  text-decoration:none;
-}
-
-@media(max-width:750px){
-
-  .menu{
-    display:none;
-  }
-
-  .hero{
-    min-height:600px;
-  }
-
-  .hero-logo{
-    width:105px;
-    height:105px;
-  }
-
-  .hero h1{
-    font-size:36px;
-  }
-
-  .hero p{
-    font-size:16px;
-  }
-
-  .botones{
-    flex-direction:column;
-    align-items:center;
-  }
-
-  .boton{
-    width:90%;
-    max-width:340px;
-  }
-
-  .accesos{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .sobre,
-  .radio-box{
-    grid-template-columns:1fr;
-  }
-
-  .pastor-card{
-    grid-template-columns:1fr;
-  }
-
-  .horarios-grid{
-    grid-template-columns:1fr;
-  }
-
-  .galeria{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .galeria img{
-    height:160px;
-  }
-
-  .contacto-grid{
-    grid-template-columns:1fr;
-  }
-
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Ministerio Cristiano Río de Gloria</title>
+  <meta name="description" content="Página oficial del Ministerio Cristiano Río de Gloria. Conoce nuestros horarios, transmisiones, radio cristiana y actividades.">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #00101f;
+      color: white;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* =========================
+       MENÚ
+    ========================== */
+
+    header {
+      background: rgba(0, 10, 20, 0.96);
+      border-bottom: 1px solid #0d4b75;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: auto;
+      min-height: 85px;
+      padding: 10px 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand img {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .brand-text h2 {
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .brand-text span {
+      color: #27a9ff;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    nav a {
+      font-size: 16px;
+      transition: .3s;
+    }
+
+    nav a:hover {
+      color: #27a9ff;
+    }
+
+    /* =========================
+       PORTADA
+    ========================== */
+
+    .hero {
+      min-height: 720px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 20px;
+
+      background:
+        linear-gradient(
+          rgba(0, 12, 28, .55),
+          rgba(0, 12, 28, .92)
+        ),
+        url("log/iglesia-4.jpeg");
+
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-content {
+      max-width: 900px;
+    }
+
+    .hero-logo {
+      width: 165px;
+      height: 165px;
+      margin: 0 auto 30px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #26aaff;
+      box-shadow: 0 0 25px rgba(38, 170, 255, .55);
+      background: #00101f;
+    }
+
+    .hero h1 {
+      font-size: 58px;
+      line-height: 1.1;
+      margin-bottom: 25px;
+    }
+
+    .hero h1 span {
+      color: #24a8ff;
+    }
+
+    .hero p {
+      font-size: 21px;
+      max-width: 750px;
+      margin: 0 auto 35px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 25px;
+      border-radius: 8px;
+      border: 1px solid #1da1ff;
+      font-weight: bold;
+      transition: .3s;
+    }
+
+    .btn-primary {
+      background: #159bea;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      background: #168bd0;
+    }
+
+    /* =========================
+       ACCESOS RÁPIDOS
+    ========================== */
+
+    .quick-section {
+      padding: 70px 20px;
+      background: #00101f;
+    }
+
+    .quick-grid {
+      max-width: 1050px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .quick-card {
+      background: #061e35;
+      border: 1px solid #1266a0;
+      padding: 30px 15px;
+      border-radius: 10px;
+      text-align: center;
+      transition: .3s;
+    }
+
+    .quick-card:hover {
+      transform: translateY(-5px);
+      border-color: #2cb0ff;
+    }
+
+    .quick-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .quick-card h3 {
+      margin-bottom: 5px;
+    }
+
+    .quick-card p {
+      color: #bcd0df;
+      font-size: 13px;
+    }
+
+    /* =========================
+       GENERAL
+    ========================== */
+
+    section {
+      scroll-margin-top: 90px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 80px 25px;
+    }
+
+    .section-label {
+      color: #1ea9ff;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    .section-title {
+      font-size: 34px;
+      margin-bottom: 15px;
+      line-height: 1.15;
+    }
+
+    .section-description {
+      color: #c7d5e0;
+    }
+
+    /* =========================
+       NOSOTROS
+    ========================== */
+
+    .about {
+      background: #00101f;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 60px;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: 390px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid #135c8c;
+    }
+
+    .about-text p {
+      color: #c7d5e0;
+      margin: 15px 0;
+    }
+
+    .verse {
+      color: white !important;
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    /* =========================
+       PASTORES
+    ========================== */
+
+    .pastores {
+      background: #031a2d;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .pastor-card {
+      max-width: 850px;
+      margin: 40px auto 0;
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      background: #06223c;
+      border: 1px solid #1575ae;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .pastor-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 330px;
+      object-fit: cover;
+    }
+
+    .pastor-info {
+      padding: 45px 35px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .pastor-info h3 {
+      font-size: 27px;
+      margin-bottom: 4px;
+    }
+
+    .pastor-info span {
+      color: #29aaff;
+      margin-bottom: 15px;
+    }
+
+    .pastor-info p {
+      color: #c7d5e0;
+    }
+
+    /* =========================
+       HORARIOS
+    ========================== */
+
+    .horarios {
+      background: #00101f;
+    }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 35px;
+    }
+
+    .schedule-card {
+      background: #06213a;
+      border: 1px solid #146da4;
+      padding: 22px;
+      border-radius: 10px;
+    }
+
+    .schedule-card h3 {
+      color: #26aaff;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .schedule-card strong {
+      font-size: 18px;
+    }
+
+    /* =========================
+       RADIO
+    ========================== */
+
+    .radio-section {
+      background: #07375e;
+    }
+
+    .radio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .radio-grid img {
+      width: 100%;
+      max-height: 390px;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+
+    .radio-content h2 {
+      font-size: 36px;
+      margin-bottom: 15px;
+    }
+
+    .radio-content p {
+      color: #d3e2ec;
+      margin-bottom: 25px;
+    }
+
+    /* =========================
+       GALERÍA
+    ========================== */
+
+    .gallery-section {
+      background: #00101f;
+    }
+
+    .galeria {
+      margin-top: 35px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .galeria img {
+      width: 100%;
+      height: 245px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #124d76;
+      transition: .3s;
+    }
+
+    .galeria img:hover {
+      transform: scale(1.02);
+    }
+
+    /* =========================
+       CONTACTO
+    ========================== */
+
+    .contact {
+      background: #031a2d;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 35px;
+    }
+
+    .contact-card {
+      background: #06213a;
+      padding: 30px 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .contact-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .contact-card h3 {
+      margin-bottom: 6px;
+    }
+
+    .contact-card p {
+      color: #c7d5e0;
+      font-size: 14px;
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer {
+      background: #000c17;
+      text-align: center;
+      padding: 45px 20px;
+      border-top: 1px solid #10466b;
+    }
+
+    .footer-logo {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+    }
+
+    footer h3 {
+      margin-bottom: 3px;
+    }
+
+    footer p {
+      color: #aebdca;
+      font-size: 13px;
+    }
+
+    .socials {
+      margin-top: 15px;
+    }
+
+    .socials a {
+      color: #26aaff;
+      margin: 0 8px;
+    }
+
+    /* =========================
+       CELULAR
+    ========================== */
+
+    @media (max-width: 850px) {
+
+      nav {
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .nav-container {
+        flex-direction: column;
+      }
+
+      .hero {
+        min-height: 620px;
+      }
+
+      .hero h1 {
+        font-size: 40px;
+      }
+
+      .hero p {
+        font-size: 17px;
+      }
+
+      .quick-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .about-grid,
+      .radio-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pastor-card {
+        grid-template-columns: 1fr;
+      }
+
+      .schedule-grid,
+      .galeria,
+      .contact-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 550px) {
+
+      nav {
+        font-size: 13px;
+      }
+
+      .brand img {
+        width: 55px;
+        height: 55px;
+      }
+
+      .brand-text h2 {
+        font-size: 18px;
+      }
+
+      .hero h1 {
+        font-size: 34px;
+      }
+
+      .hero-logo {
+        width: 130px;
+        height: 130px;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .quick-grid,
+      .schedule-grid,
+      .galeria,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title,
+      .radio-content h2 {
+        font-size: 28px;
+      }
+
+      .galeria img {
+        height: 260px;
+      }
+    }
+  </style>
 </head>
+
 
 <body>
 
-<header>
-  <div class="nav">
+  <!-- ======================
+       MENÚ
+  ======================= -->
 
-    <div class="logo-area">
-      <img src="logo-iglesia.jpg">
+  <header>
+    <div class="nav-container">
 
-      <div>
-        Ministerio Cristiano
+      <a href="#inicio" class="brand">
+        <img src="log/logo-iglesia.jpeg" alt="Logo Ministerio Cristiano Río de Gloria">
+
+        <div class="brand-text">
+          <h2>Ministerio Cristiano</h2>
+          <span>Río de Gloria</span>
+        </div>
+      </a>
+
+      <nav>
+        <a href="#inicio">Inicio</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#horarios">Horarios</a>
+        <a href="#radio">Radio</a>
+        <a href="#galeria">Galería</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <!-- ======================
+       INICIO
+  ======================= -->
+
+  <section class="hero" id="inicio">
+
+    <div class="hero-content">
+
+      <img
+        class="hero-logo"
+        src="log/logo-iglesia.jpeg"
+        alt="Río de Gloria"
+      >
+
+      <h1>
+        Bienvenidos a
         <span>Río de Gloria</span>
-      </div>
-    </div>
+      </h1>
 
-    <nav class="menu">
-      <a href="#inicio">Inicio</a>
-      <a href="#nosotros">Nosotros</a>
-      <a href="#horarios">Horarios</a>
-      <a href="#radio">Radio</a>
-      <a href="#galeria">Galería</a>
-      <a href="#contacto">Contacto</a>
-    </nav>
+      <p>
+        Un lugar para buscar la presencia de Dios,
+        escuchar su palabra y crecer juntos en la fe.
+      </p>
 
-  </div>
-</header>
+      <div class="hero-buttons">
 
+        <a href="#radio" class="btn btn-primary">
+          🔴 Ver transmisión en vivo
+        </a>
 
-<section class="hero" id="inicio">
+        <a href="#radio" class="btn">
+          🎙️ Escuchar Radio
+        </a>
 
-  <div class="hero-contenido">
-
-    <img class="hero-logo" src="logo-iglesia.jpg">
-
-    <h1>
-      Bienvenidos a
-      <span>Río de Gloria</span>
-    </h1>
-
-    <p>
-      Un lugar para buscar la presencia de Dios,
-      escuchar su palabra y crecer juntos en la fe.
-    </p>
-
-    <div class="botones">
-
-      <a href="#" class="boton">
-        🔴 Ver transmisión en vivo
-      </a>
-
-      <a href="#radio" class="boton secundario">
-        🎙️ Escuchar Radio
-      </a>
-
-      <a href="#" class="boton secundario">
-        ▶ Cultos anteriores
-      </a>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section class="seccion">
-
-  <div class="contenedor">
-
-    <div class="accesos">
-
-      <a class="acceso" href="#">
-        <div class="icon">🔴</div>
-        <h3>Transmisión en vivo</h3>
-        <p>Conéctate a nuestros cultos.</p>
-      </a>
-
-      <a class="acceso" href="#radio">
-        <div class="icon">🎙️</div>
-        <h3>Radio en vivo</h3>
-        <p>Escucha Radio Cristiana Río de Gloria.</p>
-      </a>
-
-      <a class="acceso" href="#">
-        <div class="icon">▶</div>
-        <h3>Cultos anteriores</h3>
-        <p>Mira nuevamente nuestras transmisiones.</p>
-      </a>
-
-      <a class="acceso" href="#horarios">
-        <div class="icon">📅</div>
-        <h3>Horarios</h3>
-        <p>Consulta nuestros días de culto.</p>
-      </a>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section class="seccion" id="nosotros">
-
-  <div class="contenedor">
-
-    <div class="sobre">
-
-      <img src="iglesia1.jpg">
-
-      <div>
-
-        <small style="color:#27a6ff">
-          NUESTRA IGLESIA
-        </small>
-
-        <h2>
-          Ministerio Cristiano Río de Gloria
-        </h2>
-
-        <p>
-          Somos una iglesia dedicada a compartir
-          la palabra de Dios, la adoración y la oración.
-          Nuestro deseo es que cada persona pueda
-          acercarse a Dios y encontrar fortaleza,
-          restauración y esperanza en Él.
-        </p>
-
-        <p>
-          Nuestro lema:
-          <strong>
-            “Sacia tu alma de su presencia”.
-          </strong>
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section class="seccion pastores">
-
-  <div class="contenedor">
-
-    <div class="titulo">
-
-      <small>NUESTRO MINISTERIO</small>
-
-      <h2>
-        Nuestros Pastores
-      </h2>
-
-    </div>
-
-    <div class="pastor-card">
-
-      <img src="pastores.jpg">
-
-      <div class="pastor-info">
-
-        <h3>
-          Pastores de Río de Gloria
-        </h3>
-
-        <span>
-          Sirviendo al Señor
-        </span>
-
-        <p>
-          Con amor y compromiso,
-          trabajan en la enseñanza de la palabra,
-          la oración y el cuidado espiritual
-          de la congregación.
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section class="seccion" id="horarios">
-
-  <div class="contenedor">
-
-    <div class="titulo">
-
-      <small>VEN Y ACOMPÁÑANOS</small>
-
-      <h2>
-        Horarios de cultos
-      </h2>
-
-    </div>
-
-    <div class="horarios-grid">
-
-      <div class="horario">
-        <strong>Lunes</strong>
-        <span>5:30 p. m.</span>
-      </div>
-
-      <div class="horario">
-        <strong>Martes</strong>
-        <span>5:30 p. m.</span>
-      </div>
-
-      <div class="horario">
-        <strong>Miércoles</strong>
-        <span>5:30 p. m.</span>
-      </div>
-
-      <div class="horario">
-        <strong>Viernes</strong>
-        <span>9:00 p. m. — Vigilia</span>
-      </div>
-
-      <div class="horario">
-        <strong>Domingo</strong>
-        <span>9:00 a. m.</span>
-      </div>
-
-      <div class="horario">
-        <strong>Domingo</strong>
-        <span>3:00 p. m.</span>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section class="seccion radio" id="radio">
-
-  <div class="contenedor">
-
-    <div class="radio-box">
-
-      <img src="radio.jpg">
-
-      <div>
-
-        <small style="color:#25a6ff">
-          EN VIVO 24/7
-        </small>
-
-        <h2>
-          Radio Cristiana Río de Gloria
-        </h2>
-
-        <p>
-          Música, palabra, adoración y programación
-          cristiana para acompañarte donde quiera
-          que estés.
-        </p>
-
-        <a href="#" class="boton">
-          ▶ Escuchar ahora
+        <a href="#galeria" class="btn">
+          ▶ Cultos anteriores
         </a>
 
       </div>
 
     </div>
 
-  </div>
-
-</section>
+  </section>
 
 
-<section class="seccion" id="galeria">
+  <!-- ======================
+       ACCESOS
+  ======================= -->
 
-  <div class="contenedor">
+  <section class="quick-section">
 
-    <div class="titulo">
+    <div class="quick-grid">
 
-      <small>RÍO DE GLORIA</small>
+      <a href="#radio" class="quick-card">
+        <div class="quick-icon">🔴</div>
+        <h3>Transmisión en vivo</h3>
+        <p>Conéctate a nuestros cultos.</p>
+      </a>
 
-      <h2>
-        Nuestra Iglesia
-      </h2>
+      <a href="#radio" class="quick-card">
+        <div class="quick-icon">🎙️</div>
+        <h3>Radio en vivo</h3>
+        <p>Escucha Radio Cristiana Río de Gloria.</p>
+      </a>
 
-      <p>
-        Algunos momentos de nuestros cultos
-        y actividades.
-      </p>
+      <a href="#galeria" class="quick-card">
+        <div class="quick-icon">▶</div>
+        <h3>Cultos anteriores</h3>
+        <p>Mira nuevamente nuestras transmisiones.</p>
+      </a>
 
-    </div>
-
-    <div class="galeria">
-
-      <img src="iglesia1.jpg">
-      <img src="iglesia2.jpg">
-      <img src="iglesia3.jpg">
-      <img src="portada-templo.jpg">
-      <img src="pastores.jpg">
-      <img src="iglesia2.jpg">
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section class="seccion contacto" id="contacto">
-
-  <div class="contenedor">
-
-    <div class="titulo">
-
-      <small>ESTAMOS PARA SERVIRTE</small>
-
-      <h2>
-        Contacto
-      </h2>
+      <a href="#horarios" class="quick-card">
+        <div class="quick-icon">🗓️</div>
+        <h3>Horarios</h3>
+        <p>Consulta nuestros días de culto.</p>
+      </a>
 
     </div>
 
-    <div class="contacto-grid">
+  </section>
 
-      <div class="contacto-card">
-        <div class="icon">📍</div>
-        <h3>Visítanos</h3>
-        <p>San Salvador, El Salvador</p>
+
+  <!-- ======================
+       NOSOTROS
+  ======================= -->
+
+  <section class="about" id="nosotros">
+
+    <div class="container">
+
+      <div class="about-grid">
+
+        <div class="about-image">
+          <img
+            src="log/iglesia-1.jpeg"
+            alt="Ministerio Cristiano Río de Gloria"
+          >
+        </div>
+
+        <div class="about-text">
+
+          <span class="section-label">
+            Nuestra Iglesia
+          </span>
+
+          <h2 class="section-title">
+            Ministerio Cristiano Río de Gloria
+          </h2>
+
+          <p>
+            Somos una iglesia dedicada a compartir la palabra de Dios,
+            la adoración y la oración. Nuestro deseo es que cada persona
+            pueda acercarse a Dios y encontrar fortaleza, restauración
+            y esperanza en Él.
+          </p>
+
+          <p class="verse">
+            Nuestro lema: “Solo tu alma de su presencia”.
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="contacto-card">
-        <div class="icon">💬</div>
-        <h3>WhatsApp</h3>
-        <p>Escríbenos directamente.</p>
+    </div>
+
+  </section>
+
+
+  <!-- ======================
+       PASTORES
+  ======================= -->
+
+  <section class="pastores">
+
+    <div class="container">
+
+      <div class="center">
+
+        <span class="section-label">
+          Nuestro Ministerio
+        </span>
+
+        <h2 class="section-title">
+          Nuestros Pastores
+        </h2>
+
       </div>
 
-      <div class="contacto-card">
-        <div class="icon">✉️</div>
-        <h3>Correo</h3>
-        <p>Contáctanos por correo electrónico.</p>
+      <div class="pastor-card">
+
+        <img
+          src="log/pastores-1.jpg"
+          alt="Pastores del Ministerio Cristiano Río de Gloria"
+        >
+
+        <div class="pastor-info">
+
+          <h3>Pastores de Río de Gloria</h3>
+
+          <span>Sirviendo al Señor</span>
+
+          <p>
+            Con amor y compromiso, trabajan en la enseñanza
+            de la palabra, la oración y el cuidado espiritual
+            de la congregación.
+          </p>
+
+        </div>
+
       </div>
 
     </div>
 
-  </div>
-
-</section>
+  </section>
 
 
-<footer>
+  <!-- ======================
+       HORARIOS
+  ======================= -->
 
-  <img src="logo-iglesia.jpg">
+  <section class="horarios" id="horarios">
 
-  <h3>
-    Ministerio Cristiano Río de Gloria
-  </h3>
+    <div class="container">
 
-  <p>
-    Palabra • Adoración • Oración
-  </p>
+      <div class="center">
 
-  <p>
-    Sacia tu alma de su presencia
-  </p>
+        <span class="section-label">
+          Ven y acompáñanos
+        </span>
 
-  <div class="redes">
+        <h2 class="section-title">
+          Horarios de cultos
+        </h2>
 
-    <a href="#">Facebook</a>
-    <a href="#">YouTube</a>
-    <a href="#">TikTok</a>
+      </div>
 
-  </div>
+      <div class="schedule-grid">
 
-</footer>
+        <div class="schedule-card">
+          <h3>Lunes</h3>
+          <strong>5:30 p. m.</strong>
+        </div>
+
+        <div class="schedule-card">
+          <h3>Martes</h3>
+          <strong>5:30 p. m.</strong>
+        </div>
+
+        <div class="schedule-card">
+          <h3>Miércoles</h3>
+          <strong>5:30 p. m.</strong>
+        </div>
+
+        <div class="schedule-card">
+          <h3>Viernes</h3>
+          <strong>9:00 p. m. — Vigilia</strong>
+        </div>
+
+        <div class="schedule-card">
+          <h3>Domingo</h3>
+          <strong>9:00 a. m.</strong>
+        </div>
+
+        <div class="schedule-card">
+          <h3>Domingo</h3>
+          <strong>3:00 p. m.</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================
+       RADIO
+  ======================= -->
+
+  <section class="radio-section" id="radio">
+
+    <div class="container">
+
+      <div class="radio-grid">
+
+        <div>
+          <img
+            src="log/radio.jpeg"
+            alt="Radio Cristiana Río de Gloria"
+          >
+        </div>
+
+        <div class="radio-content">
+
+          <span class="section-label">
+            En vivo 24/7
+          </span>
+
+          <h2>
+            Radio Cristiana Río de Gloria
+          </h2>
+
+          <p>
+            Música, palabra, adoración y programación cristiana
+            para acompañarte donde quiera que estés.
+          </p>
+
+          <a href="#" class="btn btn-primary">
+            ▶ Escuchar ahora
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================
+       GALERÍA
+  ======================= -->
+
+  <section class="gallery-section" id="galeria">
+
+    <div class="container">
+
+      <div class="center">
+
+        <span class="section-label">
+          Río de Gloria
+        </span>
+
+        <h2 class="section-title">
+          Nuestra Iglesia
+        </h2>
+
+        <p class="section-description">
+          Algunos momentos de nuestros cultos y actividades.
+        </p>
+
+      </div>
+
+      <div class="galeria">
+
+        <img
+          src="log/iglesia-1.jpeg"
+          alt="Iglesia Río de Gloria"
+        >
+
+        <img
+          src="log/iglesia-2.jpeg"
+          alt="Culto Río de Gloria"
+        >
+
+        <img
+          src="log/iglesia-3.jpeg"
+          alt="Ministerio Río de Gloria"
+        >
+
+        <img
+          src="log/iglesia-4.jpeg"
+          alt="Templo Río de Gloria"
+        >
+
+        <img
+          src="log/pastores-2.jpg"
+          alt="Pastores Río de Gloria"
+        >
+
+        <img
+          src="log/pastores-3.jpg"
+          alt="Ministerio Cristiano Río de Gloria"
+        >
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================
+       CONTACTO
+  ======================= -->
+
+  <section class="contact" id="contacto">
+
+    <div class="container">
+
+      <div class="center">
+
+        <span class="section-label">
+          Estamos para servirte
+        </span>
+
+        <h2 class="section-title">
+          Contacto
+        </h2>
+
+      </div>
+
+      <div class="contact-grid">
+
+        <div class="contact-card">
+
+          <div class="contact-icon">
+            📍
+          </div>
+
+          <h3>Visítanos</h3>
+
+          <p>
+            San Salvador, El Salvador
+          </p>
+
+        </div>
+
+
+        <div class="contact-card">
+
+          <div class="contact-icon">
+            💬
+          </div>
+
+          <h3>WhatsApp</h3>
+
+          <p>
+            Escríbenos directamente.
+          </p>
+
+        </div>
+
+
+        <div class="contact-card">
+
+          <div class="contact-icon">
+            ✉️
+          </div>
+
+          <h3>Correo</h3>
+
+          <p>
+            Contáctanos por correo electrónico.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================
+       PIE DE PÁGINA
+  ======================= -->
+
+  <footer>
+
+    <img
+      class="footer-logo"
+      src="log/logo-iglesia.jpeg"
+      alt="Logo Río de Gloria"
+    >
+
+    <h3>
+      Ministerio Cristiano Río de Gloria
+    </h3>
+
+    <p>
+      Palabra • Adoración • Oración
+    </p>
+
+    <p>
+      Sacia tu alma de su presencia
+    </p>
+
+    <div class="socials">
+      <a href="#">Facebook</a>
+      <a href="#">YouTube</a>
+      <a href="#">TikTok</a>
+    </div>
+
+  </footer>
 
 </body>
 </html>
