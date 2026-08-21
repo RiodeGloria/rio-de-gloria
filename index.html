@@ -231,6 +231,10 @@ header{
   font-weight:bold;
   background:rgba(2,22,40,.82);
   transition:.2s;
+  color:white;
+  cursor:pointer;
+  font-family:inherit;
+  font-size:14px;
 }
 
 .btn-primary{
@@ -403,7 +407,6 @@ header{
   color:#d3dee7;
 }
 
-/* El marco se ajusta a la foto */
 .pastor-photo{
   width:fit-content;
   max-width:100%;
@@ -415,7 +418,6 @@ header{
   box-shadow:0 8px 25px rgba(0,0,0,.18);
 }
 
-/* Mantiene la misma fotografía completa */
 .pastor-photo img{
   display:block;
   width:auto;
@@ -558,6 +560,13 @@ header{
   max-width:520px;
   line-height:1.5;
   margin-bottom:16px;
+}
+
+.radio-status{
+  margin-top:12px;
+  font-size:12px;
+  color:#78cfff;
+  min-height:18px;
 }
 
 /* =========================
@@ -782,6 +791,13 @@ footer{
 
 <body>
 
+<!-- REPRODUCTOR DE RADIO OCULTO -->
+<audio id="radioPlayer" preload="none" playsinline>
+  <source
+    src="http://uk15freenew.listen2myradio.com:36456/stream"
+    type="audio/mpeg">
+</audio>
+
 <header>
 
   <div class="nav">
@@ -838,14 +854,16 @@ footer{
     <div class="hero-buttons">
 
       <a class="btn btn-primary"
-   href="https://ssh101.com/securelive/index.php?id=tvriodegloria">
-  🔴 Ver transmisión en vivo
-</a>
+         href="https://ssh101.com/securelive/index.php?id=tvriodegloria">
+        🔴 Ver transmisión en vivo
+      </a>
 
-    <a class="btn"
-   href="http://uk15freenew.listen2myradio.com:36456/stream">
-  🎙 Escuchar Radio
-</a>
+      <button
+        class="btn radio-control"
+        type="button"
+        onclick="toggleRadio()">
+        🎙 Escuchar Radio
+      </button>
 
       <a class="btn" href="#">
         ▶ Cultos anteriores
@@ -1093,10 +1111,18 @@ footer{
         para acompañarte donde quiera que estés.
       </p>
 
-      ><a class="btn btn-primary"
-   href="http://uk15freenew.listen2myradio.com:36456/stream">
-  ▶ Escuchar ahora
-</a>
+      <button
+        class="btn btn-primary radio-control"
+        type="button"
+        onclick="toggleRadio()">
+        ▶ Escuchar ahora
+      </button>
+
+      <div
+        class="radio-status"
+        id="radioStatus">
+        Radio detenida
+      </div>
 
     </div>
 
@@ -1267,6 +1293,104 @@ footer{
   </div>
 
 </footer>
+
+
+<script>
+
+const radioPlayer = document.getElementById("radioPlayer");
+const radioStatus = document.getElementById("radioStatus");
+const radioButtons = document.querySelectorAll(".radio-control");
+
+function setRadioButtonsPlaying(){
+
+  radioButtons.forEach(function(button){
+
+    if(button.classList.contains("btn-primary")){
+      button.innerHTML = "⏸ Pausar Radio";
+    }else{
+      button.innerHTML = "⏸ Pausar Radio";
+    }
+
+  });
+
+  radioStatus.textContent = "🔵 Reproduciendo Radio Río de Gloria";
+
+}
+
+function setRadioButtonsStopped(){
+
+  radioButtons.forEach(function(button,index){
+
+    if(index === 0){
+      button.innerHTML = "🎙 Escuchar Radio";
+    }else{
+      button.innerHTML = "▶ Escuchar ahora";
+    }
+
+  });
+
+  radioStatus.textContent = "Radio detenida";
+
+}
+
+async function toggleRadio(){
+
+  try{
+
+    if(radioPlayer.paused){
+
+      radioStatus.textContent = "Conectando con la radio...";
+
+      await radioPlayer.play();
+
+      setRadioButtonsPlaying();
+
+    }else{
+
+      radioPlayer.pause();
+
+      setRadioButtonsStopped();
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    radioStatus.textContent =
+      "No se pudo iniciar la radio en este navegador.";
+
+  }
+
+}
+
+radioPlayer.addEventListener("playing", function(){
+
+  setRadioButtonsPlaying();
+
+});
+
+radioPlayer.addEventListener("pause", function(){
+
+  setRadioButtonsStopped();
+
+});
+
+radioPlayer.addEventListener("waiting", function(){
+
+  radioStatus.textContent =
+    "Conectando con la señal...";
+
+});
+
+radioPlayer.addEventListener("error", function(){
+
+  radioStatus.textContent =
+    "No se pudo cargar la señal de radio.";
+
+});
+
+</script>
 
 </body>
 </html>
