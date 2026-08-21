@@ -375,13 +375,6 @@ header{
   color:#d6e1e9;
 }
 
-.about-verse{
-  border-left:3px solid var(--blue);
-  padding-left:12px;
-  font-weight:bold;
-  font-style:italic;
-}
-
 /* =========================
    PASTORES
 ========================= */
@@ -412,22 +405,18 @@ header{
 
 .pastor-photo{
   width:100%;
-  min-height:250px;
+  height:270px;
   border-radius:10px;
   overflow:hidden;
   border:1px solid rgba(24,168,255,.42);
   background:#031729;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 
 .pastor-photo img{
   width:100%;
-  height:auto;
-  max-height:330px;
-  object-fit:contain;
-  object-position:center;
+  height:100%;
+  object-fit:cover;
+  object-position:center 30%;
 }
 
 /* =========================
@@ -483,8 +472,6 @@ header{
   font-size:12px;
   font-weight:bold;
 }
-
-/* colores individuales */
 
 .calendar-blue{
   color:#20b7ff;
@@ -733,10 +720,6 @@ footer{
     text-align:left;
   }
 
-  .pastor-photo img{
-    max-height:none;
-  }
-
   .schedule-grid{
     grid-template-columns:repeat(2,1fr);
   }
@@ -781,7 +764,6 @@ footer{
     grid-template-columns:1fr;
   }
 }
-
 </style>
 </head>
 
@@ -911,10 +893,6 @@ footer{
         la adoración y la oración. Nuestro deseo es que cada persona
         pueda acercarse a Dios y encontrar fortaleza, restauración
         y esperanza en Él.
-      </p>
-
-      <p class="about-verse">
-        Nuestro lema: “Solo tu alma de su presencia”.
       </p>
 
     </div>
@@ -1054,12 +1032,10 @@ footer{
   <div class="container radio-grid">
 
     <div class="radio-image">
-
       <img
         src="log/logo-radio.jpeg"
         alt="Radio Cristiana Río de Gloria"
       >
-
     </div>
 
     <div class="radio-text">
