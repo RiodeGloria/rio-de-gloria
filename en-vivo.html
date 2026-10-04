@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Transmisión en vivo | Río de Gloria</title>
+<meta name="description" content="Acompaña los cultos en vivo del Ministerio Cristiano Río de Gloria.">
+<meta name="theme-color" content="#102c35">
+<link rel="icon" href="log/logo-iglesia.jpeg" type="image/jpeg">
+<link rel="canonical" href="https://riodegloria.github.io/rio-de-gloria/en-vivo.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_SV">
+<meta property="og:site_name" content="Ministerio Cristiano Río de Gloria">
+<meta property="og:title" content="Transmisión en vivo | Río de Gloria">
+<meta property="og:description" content="Acompaña los cultos en vivo del Ministerio Cristiano Río de Gloria.">
+<meta property="og:url" content="https://riodegloria.github.io/rio-de-gloria/en-vivo.html">
+<meta property="og:image" content="https://riodegloria.github.io/rio-de-gloria/assets/compartir.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 
 <style>
 *{
@@ -199,7 +212,10 @@ footer{
     height:330px;
   }
 }
-</style>
+a:focus-visible{outline:3px solid #e4c18b;outline-offset:4px}
+@media(max-width:400px){.header-inner{gap:10px;flex-wrap:wrap}.brand{gap:8px}.back{font-size:14px}.brand img{width:44px;height:44px}}
+.player-help{max-width:900px;margin:18px auto;color:#c0cfda;line-height:1.6;text-align:center}.player-help a{color:#7ed1ff}
+.live-dot{color:#ef5252}</style>
 </head>
 
 <body>
@@ -233,7 +249,7 @@ footer{
     >
 
     <h1>
-      🔴 Transmisión <span>en vivo</span>
+      <span class="live-dot" aria-hidden="true">●</span> Transmisión <span>en vivo</span>
     </h1>
 
     <p>
@@ -245,7 +261,7 @@ footer{
   <div class="live-box">
 
     <iframe
-      id="liveFrame"
+      id="liveFrame" title="Transmisión en vivo de Río de Gloria"
       src="https://ssh101.com/securelive/index.php?id=tvriodegloria"
       allow="autoplay; fullscreen"
       allowfullscreen>
@@ -276,10 +292,10 @@ footer{
   </div>
 
   <div class="status">
-    🔴 Transmisión oficial del Ministerio Cristiano Río de Gloria
+    <span class="live-dot" aria-hidden="true">●</span> Transmisión oficial del Ministerio Cristiano Río de Gloria
   </div>
 
-</main>
+<p class="player-help">La disponibilidad de la señal depende de la transmisión del ministerio.<br>Si el reproductor no carga, <a href="https://ssh101.com/securelive/index.php?id=tvriodegloria" target="_blank" rel="noopener">abrir la transmisión directamente ↗</a>.<br><a href="index.html#horarios">Ver horarios de cultos</a> · <a href="index.html#radio">Escuchar radio</a></p></main>
 
 <footer>
   © 2026 Ministerio Cristiano Río de Gloria
