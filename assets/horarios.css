@@ -50,3 +50,8 @@
 #horarios .worship-sunday-times>div+div{padding-left:12px}
 #horarios .worship-vigil{padding:13px 12px;gap:10px}
 }
+
+#horarios .worship-service{display:block;margin-top:4px;font-size:13px;line-height:1.45;font-weight:400;color:#63756a}
+#horarios .worship-days dt{min-width:0}
+#horarios .worship-days dd,#horarios .worship-vigil>time{flex-shrink:0}
+@media(max-width:360px){#horarios .worship-service{font-size:12px}#horarios .worship-vigil h3{font-size:16px}}
