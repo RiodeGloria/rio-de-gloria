@@ -1,0 +1,52 @@
+/* Worship schedule — scoped to the institutional timetable. */
+#horarios.worship-schedule{background:#f2f1e9;text-align:left;border-top:1px solid #e1e4d9;padding-top:76px;padding-bottom:66px}
+#horarios .worship-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin-bottom:34px}
+#horarios .worship-heading .eyebrow{color:#43695d;letter-spacing:2px}
+#horarios .worship-heading .title{margin:10px 0 0}
+#horarios .worship-heading>p{font-size:14px;line-height:1.7;color:#566960;max-width:330px;padding-bottom:3px}
+#horarios .worship-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:32px;align-items:stretch}
+#horarios .worship-week{background:#fffefa;border:1px solid #d9dfd3;border-top:3px solid #ab8b53;border-radius:6px;padding:30px 32px;min-width:0}
+#horarios .worship-week>h3{font-family:Georgia,serif;font-size:28px;line-height:1.2;font-weight:400;color:#203f3b}
+#horarios .worship-subtitle{font-size:13px;color:#63756a;margin:8px 0 18px}
+#horarios .worship-days{margin:0}
+#horarios .worship-days>div{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 0;border-bottom:1px solid #e3e7dc}
+#horarios .worship-days dt{font-size:16px;font-weight:600;color:#294b43}
+#horarios time{font-family:Georgia,serif;font-variant-numeric:lining-nums tabular-nums;white-space:nowrap;font-size:31px;line-height:1.2;font-weight:400}
+#horarios time>span{font-family:Arial,Helvetica,sans-serif;font-size:13px;margin-left:3px}
+#horarios .worship-days dd{margin:0;color:#21473d}
+#horarios .worship-vigil{display:flex;align-items:center;justify-content:space-between;gap:18px;background:#eeeadc;border-left:3px solid #ad8b50;padding:17px 20px;margin-top:24px;color:#28453c}
+#horarios .worship-label{display:block;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;line-height:1.6}
+#horarios .worship-vigil .worship-label{color:#6c613e}
+#horarios .worship-vigil h3{font-size:18px;line-height:1.4;font-weight:600;margin:3px 0 0}
+#horarios .worship-sunday{background:#153d39;color:#fff;border-radius:6px;overflow:hidden;min-width:0;display:flex;flex-direction:column}
+#horarios .worship-sunday>img{width:100%;height:190px;object-fit:cover;object-position:center 48%}
+#horarios .worship-sunday-body{padding:26px 30px 30px;flex:1;border-top:3px solid #c5a971}
+#horarios .worship-sunday .worship-label{color:#e0c798}
+#horarios .worship-sunday h3{font-family:Georgia,serif;font-weight:400;font-size:40px;line-height:1.2;margin:9px 0 24px;color:#fffdf5}
+#horarios .worship-sunday-times{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+#horarios .worship-sunday-times>div+div{border-left:1px solid #527069;padding-left:22px}
+#horarios .worship-period{display:block;font-size:12px;color:#c6d7cf;margin-bottom:8px}
+#horarios .worship-sunday time{font-size:36px;color:#fffdf5}
+#horarios .worship-footnote{font-size:12px;color:#5b6b60;line-height:1.6;margin:22px 0 0;display:flex;gap:9px;align-items:baseline}
+#horarios .worship-footnote>span{width:6px;height:6px;background:#987e4f;flex-shrink:0;border-radius:50%}
+@media(max-width:760px){
+#horarios.worship-schedule{padding:50px 22px}
+#horarios .worship-heading{display:block;margin-bottom:27px}
+#horarios .worship-heading>p{margin-top:14px}
+#horarios .worship-layout{grid-template-columns:minmax(0,1fr);gap:22px}
+#horarios .worship-week{padding:25px 24px}
+#horarios .worship-week>h3{font-size:26px}
+#horarios .worship-days>div{padding:14px 0}
+#horarios .worship-sunday>img{height:185px}
+#horarios .worship-sunday-body{padding:24px}
+#horarios .worship-vigil{padding:16px;margin-top:22px}
+}
+@media(max-width:360px){
+#horarios.worship-schedule{padding-left:18px;padding-right:18px}
+#horarios .worship-week,#horarios .worship-sunday-body{padding-left:18px;padding-right:18px}
+#horarios time{font-size:28px}
+#horarios .worship-sunday time{font-size:30px}
+#horarios .worship-sunday-times{gap:12px}
+#horarios .worship-sunday-times>div+div{padding-left:12px}
+#horarios .worship-vigil{padding:13px 12px;gap:10px}
+}
