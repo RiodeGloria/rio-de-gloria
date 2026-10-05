@@ -6,8 +6,9 @@ const repo='https://api.github.com/repos/RiodeGloria/rio-de-gloria';
 let token='', head='', baseTree='', source='', photos=[], original=[], history=[], draftDoc=null, busy=false, dragId=null;
 const uploads=new Map();
 const clone=x=>JSON.parse(JSON.stringify(x));
-const snapshot=()=>JSON.stringify(photos);
-const dirty=()=>snapshot()!==JSON.stringify(original);
+let content=null, originalContent=null;
+const snapshot=()=>({photos:clone(photos),content:clone(content)});
+const dirty=()=>JSON.stringify(photos)!==JSON.stringify(original)||JSON.stringify(content)!==JSON.stringify(originalContent);
 const status=(message,error=false)=>{ $('#status').textContent=message;$('#status').classList.toggle('error',error); };
 function lock(value){busy=value;document.body.classList.toggle('busy',value);$('#connect').disabled=value;$('#logout').disabled=value;$('#publish').disabled=value||!dirty();$('#upload').disabled=value;}
 async function api(path,method='GET',body){
@@ -25,8 +26,79 @@ function loadSource(html){
  if(!grid)throw new Error('No se encontró la galería. No se modificó la página.');
  const list=[...grid.querySelectorAll('.photo-card')].map((c,i)=>({id:'existing-'+i,src:safeImage(c.dataset.full),thumb:safeImage(c.querySelector('img').getAttribute('src')),description:c.dataset.caption||'',category:c.dataset.category,width:Number(c.querySelector('img').getAttribute('width'))||1600,height:Number(c.querySelector('img').getAttribute('height'))||1000}));
  if(list.some(p=>!categories.includes(p.category)))throw new Error('Hay categorías desconocidas. No se modificó la página.');
- draftDoc=doc;photos=list;original=clone(list);history=[];
+ draftDoc=doc;photos=list;original=clone(list);content=readContent(doc);originalContent=clone(content);history=[];renderContent();
 }
+const socialFields=[['social-facebook','Facebook'],['social-youtube','YouTube'],['social-tiktok','TikTok'],['social-instagram','Instagram'],['whatsapp-contact','WhatsApp']];
+function readContent(doc){
+ const text=id=>{const t=doc.getElementById(id)?.textContent.trim()||'';return t==='Declaración oficial pendiente de incorporar.'?'':t;};
+ return {mission:text('mission-text'),vision:text('vision-text'),social:Object.fromEntries(socialFields.map(([id])=>[id,doc.getElementById(id)?.getAttribute('href')||''])),services:[...doc.querySelectorAll('#horarios .service-photo-card')].map((card,i)=>{const img=card.querySelector('img');return {day:card.querySelector('.service-photo-day').textContent.trim(),title:card.querySelector('h3').textContent.trim(),image:{id:'service-'+i,src:safeImage(img.getAttribute('src')),thumb:safeImage(img.getAttribute('src')),description:img.alt,width:img.width,height:img.height},times:[...card.querySelectorAll('.service-photo-hour')].map(row=>({label:row.querySelector('span').textContent.trim(),value:row.querySelector('time').getAttribute('datetime')}))};})};
+}
+function field(label,value,set,{type='text',maxLength=180,multiline=false}={}){
+ const input=element(multiline?'textarea':'input',{value,maxLength});if(!multiline)input.type=type;else input.rows=7;
+ input.addEventListener('input',()=>{if(busy)return;checkpoint();set(input.value);render();});return labeled(label,input);
+}
+function renderContent(){
+ const identity=$('#identity-editor');identity.replaceChildren(field('Misión',content.mission,v=>content.mission=v,{multiline:true,maxLength:4000}),field('Visión',content.vision,v=>content.vision=v,{multiline:true,maxLength:4000}));
+ const social=$('#social-editor');social.replaceChildren(...socialFields.map(([id,label])=>field(label,content.social[id],v=>content.social[id]=v,{type:'url',maxLength:1000})));
+ const grid=$('#schedule-editor');grid.replaceChildren();
+ content.services.forEach((service,i)=>{
+ const card=element('article',{className:'panel service-editor'}),img=element('img',{className:'service-thumb',src:imageURL(service.image,true),alt:service.image.description});
+ card.append(element('h3',{textContent:'Tarjeta '+(i+1)}),img);
+ const file=element('input',{type:'file',accept:'image/jpeg,image/png,image/webp'});file.addEventListener('change',()=>uploadService(file,service));
+ card.append(labeled('Subir otra fotografía',file),button('Elegir de la galería',()=>choosePhoto(service)));
+ card.append(field('Día o encabezado',service.day,v=>service.day=v),field('Nombre del culto / título',service.title,v=>service.title=v),field('Descripción de la fotografía',service.image.description,v=>service.image.description=v));
+ service.times.forEach((time,j)=>{const row=element('div',{className:'time-fields'});row.append(field('Texto del horario '+(j+1),time.label,v=>time.label=v),field('Hora',time.value,v=>time.value=v,{type:'time'}));card.append(row);});grid.append(card);
+ });
+}
+function choosePhoto(service){
+ const dialog=element('dialog',{className:'photo-picker'}),top=element('div',{className:'heading'}),grid=element('div',{className:'preview-grid'});
+ top.append(element('h2',{textContent:'Elige una fotografía'}),button('Cerrar',()=>dialog.close()));
+ photos.forEach((p,i)=>{const b=button('',()=>{checkpoint();service.image=clone(p);dialog.close();renderContent();render();});b.append(element('img',{src:imageURL(p),alt:p.description,loading:'lazy'}),element('span',{textContent:(i+1)+'. '+p.description}));grid.append(b);});
+ dialog.append(top,grid);dialog.addEventListener('close',()=>dialog.remove());document.body.append(dialog);dialog.showModal();
+}
+async function uploadService(input,service){
+ const file=input.files[0];input.value='';if(!file||busy)return;lock(true);status('Preparando la fotografía del culto…');let bitmap;
+ try{
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>20*1024*1024)throw new Error('Elige una imagen JPG, PNG o WebP de hasta 20 MB.');
+ bitmap=await createImageBitmap(file,{imageOrientation:'from-image'});if(bitmap.width*bitmap.height>50000000)throw new Error('La imagen supera los 50 megapíxeles.');
+ const full=await resize(bitmap,1600,.84),mini=await resize(bitmap,480,.78),id=crypto.randomUUID();
+ uploads.set(id,{full:full.blob,thumb:mini.blob,fullURL:URL.createObjectURL(full.blob),thumbURL:URL.createObjectURL(mini.blob)});
+ checkpoint();service.image={id,src:'assets/fotos/subida-'+id+'.webp',thumb:'assets/fotos/subida-'+id+'-mini.webp',description:service.image.description,width:full.width,height:full.height};renderContent();render();status('Fotografía del culto preparada. Falta guardar y publicar.');
+ }catch(error){status(error.message,true);}finally{bitmap?.close();lock(false);}
+}
+function validatedURL(value,label){
+ if(!value.trim())return '';let url;try{url=new URL(value.trim());}catch{throw new Error('Revisa el enlace de '+label+': debe comenzar con https://.');}
+ if(url.protocol!=='https:'||url.username||url.password)throw new Error('El enlace de '+label+' debe usar https:// y no incluir contraseñas.');return url.href;
+}
+function validateContent(){
+ socialFields.forEach(([id,label])=>validatedURL(content.social[id],label));
+ content.services.forEach((s,i)=>{if(!s.day.trim()||!s.title.trim())throw new Error('Completa el día y título de la tarjeta '+(i+1)+'.');s.times.forEach(t=>{if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(t.value)||!t.label.trim())throw new Error('Completa el texto y la hora de la tarjeta '+(i+1)+'.');});safeImage(s.image.src);});
+}
+function applyContent(doc){
+ // Leave untouched sections exactly as loaded, including existing placeholders.
+ for(const [key,id]of [['mission','mission-text'],['vision','vision-text']])if(content[key]!==originalContent[key]){const p=doc.getElementById(id);p.textContent=content[key].trim();p.closest('article').hidden=!content[key].trim();}
+ content.services.forEach((s,i)=>{
+ if(JSON.stringify(s)===JSON.stringify(originalContent.services[i]))return;
+ const card=doc.querySelectorAll('#horarios .service-photo-card')[i];card.querySelector('.service-photo-day').textContent=s.day.trim();card.querySelector('h3').textContent=s.title.trim();
+ const img=card.querySelector('img');img.setAttribute('src',safeImage(s.image.src));img.alt=s.image.description;img.width=s.image.width;img.height=s.image.height;
+ card.querySelectorAll('.service-photo-hour').forEach((row,j)=>{const data=s.times[j],time=row.querySelector('time'),[h,m]=data.value.split(':').map(Number);row.querySelector('span').textContent=data.label.trim();time.setAttribute('datetime',data.value);time.textContent=(h%12||12)+':'+String(m).padStart(2,'0')+' ';const small=doc.createElement('small');small.textContent=h<12?'a. m.':'p. m.';time.append(small);});
+ });
+ socialFields.forEach(([id,label])=>{
+ if(content.social[id]===originalContent.social[id])return;
+ const url=validatedURL(content.social[id],label),old=doc.getElementById(id),el=doc.createElement(url?'a':'span');el.id=id;
+ if(url){el.href=url;el.target='_blank';el.rel='noopener noreferrer';el.textContent=label==='WhatsApp'?'Escríbenos por WhatsApp':label;}else {el.hidden=true;}
+ if(old)old.replaceWith(el);else doc.querySelector('footer .socials').append(el);
+ if(id==='whatsapp-contact')el.closest('.contact-card').hidden=!url;
+ });
+}
+function renderPreview(){
+ const area=$('#content-preview');area.replaceChildren();
+ const add=(title,text)=>{if(!text.trim())return;area.append(element('h3',{textContent:title}),element('p',{textContent:text}));};add('Misión',content.mission);add('Visión',content.vision);
+ const grid=element('div',{className:'schedule-editor'});content.services.forEach(s=>{const card=element('article',{className:'panel'});card.append(element('img',{className:'service-thumb',src:imageURL(s.image,true),alt:s.image.description}),element('p',{textContent:s.day}),element('h3',{textContent:s.title}));s.times.forEach(t=>{const[h,m]=t.value.split(':').map(Number);card.append(element('p',{textContent:t.label+': '+(h%12||12)+':'+String(m).padStart(2,'0')+(h<12?' a. m.':' p. m.')}));});grid.append(card);});area.append(element('h3',{textContent:'Horarios'}),grid);
+ socialFields.forEach(([id,label])=>{const url=validatedURL(content.social[id],label);if(url){const p=element('p');p.append(element('a',{textContent:label+' ↗',href:url,target:'_blank',rel:'noopener noreferrer'}));area.append(p);}});
+}
+document.querySelectorAll('[data-panel]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-panel]').forEach(tab=>{const selected=tab===b;tab.setAttribute('aria-pressed',String(selected));$('#panel-'+tab.dataset.panel).hidden=!selected;});}));
+
 $('#connect-form').addEventListener('submit',async e=>{
  e.preventDefault();if(busy)return;token=$('#token').value.trim();$('#token').value='';if(!token)return;lock(true);status('Conectando con tu página…');
  try{
@@ -35,10 +107,10 @@ $('#connect-form').addEventListener('submit',async e=>{
  const ref=await api('/git/ref/heads/main');head=ref.object.sha;
  const commit=await api('/git/commits/'+head);baseTree=commit.tree.sha;
  const file=await api('/contents/index.html?ref='+head);source=decode(file.content);loadSource(source);
- $('#login').hidden=true;$('#editor').hidden=false;render();status('Galería cargada. Puedes preparar tus cambios.');
+ $('#login').hidden=true;$('#editor').hidden=false;render();status('Página cargada. Elige el apartado que quieres modificar.');
  }catch(error){token='';status(error.message,true);}finally{lock(false);}
 });
-function checkpoint(){history.push(clone(photos));if(history.length>50)history.shift();}
+function checkpoint(){history.push(snapshot());if(history.length>50)history.shift();}
 function changed(){render();}
 function element(tag,props={}){const el=document.createElement(tag);Object.assign(el,props);return el;}
 function labeled(text,control){const label=element('label',{textContent:text});label.append(control);return label;}
@@ -74,8 +146,8 @@ function render(){
  });$('#empty').hidden=grid.childElementCount>0;
 }
 $('#filter').addEventListener('change',render);$('#search').addEventListener('input',render);
-$('#undo').addEventListener('click',()=>{if(busy||!history.length)return;photos=history.pop();changed();status('Último cambio deshecho.');});
-$('#logout').addEventListener('click',()=>{if(busy)return;if(dirty()&&!confirm('Hay cambios sin publicar. ¿Salir y descartarlos?'))return;token='';uploads.forEach(u=>{URL.revokeObjectURL(u.fullURL);URL.revokeObjectURL(u.thumbURL);});uploads.clear();photos=[];original=[];source='';draftDoc=null;history=[];$('#editor').hidden=true;$('#login').hidden=false;$('#photo-grid').replaceChildren();$('#preview-grid').replaceChildren();$('#zoom-image').removeAttribute('src');status('Sesión cerrada.');});
+$('#undo').addEventListener('click',()=>{if(busy||!history.length)return;const previous=history.pop();photos=previous.photos;content=previous.content;renderContent();changed();status('Último cambio deshecho.');});
+$('#logout').addEventListener('click',()=>{if(busy)return;if(dirty()&&!confirm('Hay cambios sin publicar. ¿Salir y descartarlos?'))return;token='';uploads.forEach(u=>{URL.revokeObjectURL(u.fullURL);URL.revokeObjectURL(u.thumbURL);});uploads.clear();photos=[];original=[];content=null;originalContent=null;source='';draftDoc=null;history=[];$('#editor').hidden=true;$('#login').hidden=false;$('#photo-grid').replaceChildren();$('#preview-grid').replaceChildren();$('#zoom-image').removeAttribute('src');status('Sesión cerrada.');});
 window.addEventListener('beforeunload',e=>{if(dirty()||busy){e.preventDefault();e.returnValue='';}});
 async function resize(bitmap,size,quality){const ratio=Math.min(1,size/Math.max(bitmap.width,bitmap.height));const canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*ratio);canvas.height=Math.round(bitmap.height*ratio);const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);const blob=await new Promise(r=>canvas.toBlob(r,'image/webp',quality));if(!blob||blob.type!=='image/webp')throw new Error('Este navegador no permite preparar WebP. Abre el panel en Chrome actualizado.');return{blob,width:canvas.width,height:canvas.height};}
 $('#upload').addEventListener('change',async e=>{
@@ -95,36 +167,42 @@ $('#upload').addEventListener('change',async e=>{
  status(added.length+' fotografías agregadas al final. Falta guardar y publicar.'+(rejected.length?' No se cargaron: '+rejected.join('; '):''),rejected.length>0);lock(false);
 });
 $('#preview').addEventListener('click',()=>{
+ try{validateContent();renderPreview();}catch(error){status(error.message,true);return;}
  const grid=$('#preview-grid');grid.replaceChildren();photos.forEach((p,i)=>{const b=button('',()=>zoom(p));b.append(element('img',{src:imageURL(p),alt:p.description,loading:'lazy'}),element('span',{textContent:(i+1)+'. '+p.category+' · '+p.description}));grid.append(b);});$('#preview-dialog').showModal();
 });$('#close-preview').addEventListener('click',()=>$('#preview-dialog').close());$('#close-zoom').addEventListener('click',()=>$('#zoom').close());
 function buildHTML(){
- const doc=new DOMParser().parseFromString(source,'text/html'),grid=doc.querySelector('#galeria .gallery-grid');grid.replaceChildren();
+ const doc=new DOMParser().parseFromString(source,'text/html'),grid=doc.querySelector('#galeria .gallery-grid');
+ if(JSON.stringify(photos)!==JSON.stringify(original)){grid.replaceChildren();
  photos.forEach((p,i)=>{
  const b=doc.createElement('button');b.className='photo-card';b.type='button';b.dataset.category=p.category;b.dataset.full=safeImage(p.src);b.dataset.caption=p.description;b.setAttribute('aria-label','Ampliar: '+p.description+' ('+(i+1)+')');
- const img=doc.createElement('img');img.src=safeImage(p.thumb);img.width=p.width;img.height=p.height;img.alt=p.description;img.loading='lazy';img.decoding='async';const span=doc.createElement('span');span.textContent=p.category+' ';const arrow=doc.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='↗';span.append(arrow);b.append(img,span);grid.append(b);
+ const img=doc.createElement('img');img.src=safeImage(p.thumb);img.width=p.width;img.height=p.height;img.alt=p.description;img.setAttribute('loading','lazy');img.setAttribute('decoding','async');const span=doc.createElement('span');span.textContent=p.category+' ';const arrow=doc.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='↗';span.append(arrow);b.append(img,span);grid.append(b);
  });
+ }
+ applyContent(doc);
  return '<!DOCTYPE html>\n'+doc.documentElement.outerHTML+'\n';
 }
-function summary(){const old=new Set(original.map(p=>p.id)),now=new Set(photos.map(p=>p.id));return photos.length+' fotografías en total · '+photos.filter(p=>!old.has(p.id)).length+' nuevas · '+original.filter(p=>!now.has(p.id)).length+' retiradas de la galería. También se guardará el orden, las descripciones y las categorías.';}
-$('#publish').addEventListener('click',()=>{if(busy||!dirty())return;$('#summary').textContent=summary();$('#confirm').showModal();});$('#cancel-publish').addEventListener('click',()=>$('#confirm').close());
+function summary(){const old=new Set(original.map(p=>p.id)),now=new Set(photos.map(p=>p.id));return photos.length+' fotografías en total · '+photos.filter(p=>!old.has(p.id)).length+' nuevas · '+original.filter(p=>!now.has(p.id)).length+' retiradas de la galería. También se guardarán los cambios de horarios, misión, visión y redes sociales.';}
+$('#publish').addEventListener('click',()=>{if(busy||!dirty())return;try{validateContent();}catch(error){status(error.message,true);return;}$('#summary').textContent=summary();$('#confirm').showModal();});$('#cancel-publish').addEventListener('click',()=>$('#confirm').close());
 async function base64(blob){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result.split(',')[1]);reader.onerror=()=>reject(new Error('No se pudo preparar la imagen.'));reader.readAsDataURL(blob);});}
 $('#confirm-publish').addEventListener('click',async()=>{
  if(busy||!dirty())return;$('#confirm').close();lock(true);status('Comprobando la versión actual…');
  try{
  const ref=await api('/git/ref/heads/main');if(ref.object.sha!==head)throw new Error('La página cambió desde que entraste. No se sobrescribió nada. Conserva esta pestaña para consultar tus cambios y abre otra sesión para cargar la versión nueva.');
- const entries=[],pending=photos.filter(p=>uploads.has(p.id)&&!uploads.get(p.id).published);
+ validateContent();
+ const entries=[],pending=[...new Map([...photos,...content.services.map(s=>s.image)].map(p=>[p.id,p])).values()].filter(p=>uploads.has(p.id)&&!uploads.get(p.id).published);
  for(const [i,p] of pending.entries()){
  status('Subiendo fotografía '+(i+1)+' de '+pending.length+'…');const upload=uploads.get(p.id);
  for(const [key,path]of [['full',p.src],['thumb',p.thumb]]){const blob=await api('/git/blobs','POST',{content:await base64(upload[key]),encoding:'base64'});entries.push({path,mode:'100644',type:'blob',sha:blob.sha});}
  }
  const html=buildHTML();entries.push({path:'index.html',mode:'100644',type:'blob',content:html});
  const tree=await api('/git/trees','POST',{base_tree:baseTree,tree:entries});
- const commit=await api('/git/commits','POST',{message:'Actualizar galería desde el panel de fotografías',tree:tree.sha,parents:[head]});
+ const commit=await api('/git/commits','POST',{message:'Actualizar página desde el panel de administración',tree:tree.sha,parents:[head]});
  status('Guardando los cambios…');
  try{await api('/git/refs/heads/main','PATCH',{sha:commit.sha,force:false});}catch(error){const check=await api('/git/ref/heads/main').catch(()=>null);if(check?.object.sha!==commit.sha)throw error;}
- pending.forEach(p=>{uploads.get(p.id).published=true;});head=commit.sha;baseTree=tree.sha;source=html;draftDoc=new DOMParser().parseFromString(source,'text/html');original=clone(photos);history=[];render();
+ pending.forEach(p=>{uploads.get(p.id).published=true;});head=commit.sha;baseTree=tree.sha;source=html;draftDoc=new DOMParser().parseFromString(source,'text/html');original=clone(photos);originalContent=clone(content);history=[];render();
  status('Cambios guardados en GitHub. La publicación de la página está en proceso. Puedes seguir el estado con el enlace de abajo.');
  const link=element('a',{href:'https://github.com/RiodeGloria/rio-de-gloria/actions',textContent:' Ver estado de publicación ↗',target:'_blank',rel:'noopener noreferrer'});$('#status').append(link);
  }catch(error){status(error.message,true);}finally{lock(false);}
 });
 })();
+

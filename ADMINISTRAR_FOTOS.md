@@ -29,3 +29,15 @@ El orden público sigue estando en el HTML. `assets/galeria.json` del paquete an
 ## Alcance de verificación
 
 Las verificaciones automatizadas del panel utilizan respuestas simuladas de GitHub para no alterar las fotografías existentes. Se comprueban las operaciones de edición, la generación del HTML, la publicación atómica y los conflictos. La publicación inicial del panel conserva las 94 fotografías.
+
+
+
+## Administrar toda la página
+Entra en `admin.html` con la misma clave de GitHub. El panel tiene cuatro apartados:
+
+- **Galería:** subir, retirar, ordenar y describir fotografías.
+- **Horarios:** cambiar el encabezado, título, texto y hora de cada culto; el domingo conserva dos horarios. Puedes subir una fotografía nueva o elegir una de la galería. Subir una foto aquí no la agrega al álbum.
+- **Misión y visión:** escribir los textos oficiales. Un campo vacío oculta ese apartado.
+- **Redes sociales:** pegar enlaces completos HTTPS a Facebook, YouTube, TikTok, Instagram y WhatsApp. Un campo vacío oculta el enlace. Para WhatsApp, usa `https://wa.me/503` seguido del número sin espacios.
+
+Revisa **Vista previa** y presiona **Guardar y publicar** para guardar todos los apartados en una sola operación. **Deshacer** permite revertir cambios pendientes de cualquier apartado. Los cambios sin publicar se pierden al cerrar o recargar la pestaña. La clave permanece únicamente en memoria. Si otra persona publica mientras editas, el panel detiene el guardado para evitar sobrescribir la nueva versión.
