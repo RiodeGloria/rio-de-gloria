@@ -43,11 +43,12 @@ large.addEventListener('touchstart',e=>{touchStart=e.touches.length===1?{x:e.tou
 large.addEventListener('touchmove',e=>{if(e.touches.length>1)touchStart=null;},{passive:true});
 large.addEventListener('touchend',e=>{if(!touchStart)return;const t=e.changedTouches[0],dx=t.clientX-touchStart.x,dy=t.clientY-touchStart.y;touchStart=null;if((window.visualViewport?.scale||1)>1.05)return;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5)showPhoto(current+(dx<0?1:-1));},{passive:true});
 const cfg=window.RIO_CONFIG||{};
-for(const [key,id] of [['mision','mission-text'],['vision','vision-text'],['ubicacion','church-location']]){if(cfg[key])document.getElementById(id).textContent=cfg[key];}
+for(const [key,id] of [['mision','mission-text'],['vision','vision-text'],['ubicacion','church-location']]){if(cfg[key]&&!document.getElementById(id).dataset.rioCustom)document.getElementById(id).textContent=cfg[key];}
 function httpsURL(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:null;}catch{return null;}}
-function linkAt(id,url,label){const a=document.createElement('a');a.href=url;a.textContent=label;document.getElementById(id).replaceChildren(a);}
+function linkAt(id,url,label){if(document.getElementById(id).dataset.rioCustom)return;const a=document.createElement('a');a.href=url;a.textContent=label;document.getElementById(id).replaceChildren(a);}
 if(/^\d{8,15}$/.test(cfg.whatsapp))linkAt('whatsapp-contact','https://wa.me/'+cfg.whatsapp,'Escríbenos por WhatsApp');
 if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cfg.correo))linkAt('email-contact','mailto:'+cfg.correo,cfg.correo);
 for(const key of ['facebook','youtube','tiktok']){const url=httpsURL(cfg[key]);if(url)linkAt('social-'+key,url,{facebook:'Facebook',youtube:'YouTube',tiktok:'TikTok'}[key]);}
 const teaching=httpsURL(cfg.ensenanza);
-if(teaching){const old=document.querySelector('#learning-button'),a=document.createElement('a');a.className=old.className;a.id=old.id;a.href=teaching;a.textContent='Comenzar a aprender';old.replaceWith(a);document.querySelector('#learning-status').textContent='Aprendamos juntos';document.querySelector('#learning-note').textContent='Entra a nuestra plataforma de enseñanza bíblica.';}
+if(teaching&&!document.querySelector('#learning-button').dataset.rioCustom){const old=document.querySelector('#learning-button'),a=document.createElement('a');a.className=old.className;a.id=old.id;a.href=teaching;a.textContent='Comenzar a aprender';old.replaceWith(a);document.querySelector('#learning-status').textContent='Aprendamos juntos';document.querySelector('#learning-note').textContent='Entra a nuestra plataforma de enseñanza bíblica.';}
+

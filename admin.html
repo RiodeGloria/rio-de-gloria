@@ -5,15 +5,15 @@
 <meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'; object-src 'none'">
 <title>Administrar página · Río de Gloria</title>
-<link rel="icon" href="log/logo-iglesia.jpeg"><link rel="stylesheet" href="assets/admin.css?v=2">
-<script src="assets/admin.js?v=3" defer></script>
+<link rel="icon" href="log/logo-iglesia.jpeg"><link rel="stylesheet" href="assets/admin.css?v=4">
+<script src="assets/admin.js?v=4" defer></script>
 </head>
 <body>
 <header><a class="brand" href="index.html"><img src="log/logo-iglesia.jpeg" alt=""><span>RÍO DE GLORIA<small>Administración de la página</small></span></a><a href="index.html" target="_blank" rel="noopener">Ver página ↗</a></header>
 <main>
 <section id="login" class="login panel">
 <p class="eyebrow">RÍO DE GLORIA</p><h1>Administra nuestra página.</h1>
-<p>Administra la galería, los horarios, la misión y visión y las redes sociales. Solo una cuenta con permiso de escritura puede publicar.</p>
+<p>Edita todas las secciones de la página, sus textos, fotografías y enlaces. Solo una cuenta con permiso de escritura puede publicar.</p>
 <form id="connect-form"><label for="token">Clave de acceso de GitHub</label><input id="token" type="password" autocomplete="off" spellcheck="false" required placeholder="Pega aquí tu clave de acceso"><button class="primary" type="submit" id="connect">Entrar al panel</button></form>
 <p class="muted">La clave se usa únicamente para conectarte a GitHub. Permanece en memoria mientras esta pestaña esté abierta; debes ingresarla de nuevo al recargar o volver a entrar. No la envíes por chat.</p>
 <details><summary>Primera vez: crear mi clave de acceso</summary><ol><li>Entra con la cuenta <strong>RiodeGloria</strong> a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">crear una clave en GitHub ↗</a>.</li><li>Escribe un nombre, por ejemplo <strong>Panel de fotos</strong>, y elige una fecha de vencimiento.</li><li>En <strong>Resource owner</strong>, elige <strong>RiodeGloria</strong>. En <strong>Repository access</strong>, selecciona <strong>Only select repositories</strong> y marca solo <strong>rio-de-gloria</strong>.</li><li>En los permisos del repositorio, agrega <strong>Contents: Read and write</strong>. Metadata de lectura se incluye automáticamente. No necesitas otros permisos.</li><li>Presiona <strong>Generate token</strong>, copia la clave y pégala arriba. Guárdala en tu administrador de contraseñas para volver a entrar; puedes revocarla desde GitHub cuando quieras.</li></ol></details>
@@ -21,12 +21,13 @@
 <div id="status" role="status" aria-live="polite"></div>
 <section id="editor" hidden>
 <div class="heading"><div><p class="eyebrow">MINISTERIO CRISTIANO</p><h1>Administrar página</h1></div><button id="logout" type="button">Salir</button></div>
-<nav class="editor-tabs" aria-label="Apartados del panel"><button data-panel="gallery" aria-pressed="true">Galería</button><button data-panel="schedule" aria-pressed="false">Horarios</button><button data-panel="identity" aria-pressed="false">Misión y visión</button><button data-panel="social" aria-pressed="false">Redes sociales</button></nav>
+<nav class="editor-tabs" aria-label="Apartados del panel"><button data-panel="sections" aria-pressed="false">Todas las secciones</button><button data-panel="gallery" aria-pressed="true">Galería</button><button data-panel="schedule" aria-pressed="false">Horarios</button><button data-panel="identity" aria-pressed="false">Misión y visión</button><button data-panel="social" aria-pressed="false">Redes sociales</button></nav>
 <section id="panel-gallery"><h2>Mis fotografías <span id="total"></span></h2><p>Arrastra las fotos en computadora o usa «Mover a» en tu teléfono.</p>
 <div class="panel toolbar"><label class="upload primary">＋ Subir fotografías<input id="upload" type="file" accept="image/jpeg,image/png,image/webp" multiple></label><label>Categoría<select id="filter"><option>Todas</option><option>Historia</option><option>Construcción</option><option>Cultos</option><option>Comunidad</option><option>Espacios</option><option>Pastores y obreros</option></select></label><label class="search">Buscar<input id="search" type="search" placeholder="Descripción de la fotografía"></label></div>
 <p class="hint">Los números indican la posición en la galería completa. Puedes seleccionar varias fotos JPG, PNG o WebP (máximo 20 por carga y 20 MB por foto). Se optimizan automáticamente para la página.</p>
 <div id="photo-grid" class="photo-grid"></div><p id="empty" hidden>No hay fotografías para mostrar con este filtro.</p>
 </section>
+<section id="panel-sections" class="panel" hidden><h2>Editar todas las secciones</h2><p>Elige una sección y modifica sus textos, fotografías y enlaces. Los cambios se publican al pulsar Guardar y publicar. Para los enlaces utiliza https://, mailto: para correo o tel: para teléfono. Los enlaces internos existentes también se pueden conservar.</p><label>Sección<select id="section-select"></select></label><h2 id="section-title"></h2><div id="section-fields" class="section-fields"></div></section>
 <section id="panel-schedule" hidden><h2>Horarios de cultos</h2><p>Cambia los textos, las horas y la fotografía de cada tarjeta. Las horas corresponden a El Salvador.</p><div id="schedule-editor" class="schedule-editor"></div></section>
 <section id="panel-identity" class="panel" hidden><h2>Misión y visión</h2><p>Escribe los textos oficiales de la iglesia. Si dejas un campo vacío, ese apartado no se mostrará.</p><div id="identity-editor" class="form-fields"></div></section>
 <section id="panel-social" class="panel" hidden><h2>Redes sociales</h2><p>Pega el enlace completo de cada cuenta, comenzando con https://. Deja vacío lo que no quieras mostrar. Para WhatsApp puedes usar https://wa.me/503 seguido del número.</p><div id="social-editor" class="form-fields"></div></section>
@@ -38,4 +39,5 @@
 <dialog id="zoom"><button id="close-zoom">Cerrar ✕</button><img id="zoom-image" alt=""><p id="zoom-caption"></p></dialog>
 <footer>Ministerio Cristiano Río de Gloria · Administración de la página</footer>
 </body></html>
+
 

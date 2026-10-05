@@ -4,6 +4,8 @@ const radioPlayer = document.getElementById("radioPlayer");
 const radioStatus = document.getElementById("radioStatus");
 const radioButtons = document.querySelectorAll(".radio-control");
 
+const radioButtonLabels=[...radioButtons].map(button=>button.innerHTML);
+
 function setRadioButtonsPlaying(){
 
   radioButtons.forEach(function(button){
@@ -24,11 +26,7 @@ function setRadioButtonsStopped(){
 
   radioButtons.forEach(function(button,index){
 
-    if(index === 0){
-      button.innerHTML = "Escuchar Radio";
-    }else{
-      button.innerHTML = "▶ Escuchar ahora";
-    }
+    button.innerHTML = radioButtonLabels[index];
 
   });
 
