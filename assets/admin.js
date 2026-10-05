@@ -1,7 +1,7 @@
 /* No third-party scripts or persistent credential storage on this page. */
 'use strict';
 (() => {
-const $=s=>document.querySelector(s), categories=['Historia','Construcción','Cultos','Comunidad','Espacios'];
+const $=s=>document.querySelector(s), categories=['Historia','Construcción','Cultos','Comunidad','Espacios','Pastores y obreros'];
 const repo='https://api.github.com/repos/RiodeGloria/rio-de-gloria';
 let token='', head='', baseTree='', source='', photos=[], original=[], history=[], draftDoc=null, busy=false, dragId=null;
 const uploads=new Map();
